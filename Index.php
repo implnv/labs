@@ -11,9 +11,9 @@ Template::getInstance()->setHead('
 
 Template::getInstance()->useWrapper('
     <div class="container mt-2 mb-2">
-        <nav class="navbar navbar-expand-lg rounded-4  font-monospace" style="background-color: #0000000f">
+        <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
-                <a class="navbar-brand" href="/">Администрирование</a>
+                <a class="navbar-brand h1" href="/">Администрирование</a>
                 <div class="navbar-nav">
                     <a class="nav-link" href="/students">Студенты</a>
                     <a class="nav-link" href="/groups">Группы</a>
@@ -31,7 +31,7 @@ $route = new Router();
 $http = new Http($route);
 
 $StudentsModel = new Model(StudentsModel::class);
-$groupsModel   = new Model(GroupsModel::class);
+$GroupsModel   = new Model(GroupsModel::class);
 
 $route->get('/', function (Request $req, Response $res) {
     $res->setTitle('Главная');
