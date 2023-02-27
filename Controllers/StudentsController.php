@@ -5,27 +5,32 @@ class StudentsController
     {
         global $StudentsModel;
 
-        $students = $StudentsModel->find([]);
-        
+        $students = $StudentsModel->select()->leftJoin('groups', ['group_id' => 'group_id'])->eq()->requestAll();
+
         if ($students) {
-            $s = '';
+            $studentsMarkup = '';
 
             foreach ($students as $student) {
-                $s .= "
+                $studentsMarkup .= "
                     <tr id='$student->_student_id' onclick=window.location.href='students/$student->_student_id'>
                         <td>$student->first_name</th>
                         <td>$student->second_name</td>
                         <td>$student->birth_date</td>
                         <td>$student->receipt_date</td>
-                        <td>$student->group_id</td>
+                        <td>$student->group_name</td>
                     </tr>
                 ";
             }
 
             $res->setTitle('Студенты');
             $res->sendHTML("
-                <table class='table table-hover caption-top'>
-                    <caption class=''>Список студентов</caption>
+                <div class='btn-group' role='group' aria-label='Basic example'>
+                    <button type='button' class='btn btn-primary'>Добавить</button>
+                    <button type='button' class='btn btn-danger'>Удалить</button>
+                    <button type='button' class='btn btn-warning'>Редактировать</button>
+                </div>
+                <table class='table table-bordered table-hover caption-top'>
+                    <caption class='fw-bold'>Список студентов</caption>
                     <thead>
                         <tr>
                             <th scope='col'>Имя</th>
@@ -35,8 +40,8 @@ class StudentsController
                             <th scope='col'>Группа</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        $s
+                    <tbody class='font-monospace'>
+                        $studentsMarkup
                     </tbody>
             ");
         }
@@ -45,19 +50,21 @@ class StudentsController
     public static function Student(Request $req, Response $res)
     {
         global $StudentsModel;
-        $student = $StudentsModel->findById($req->params['id']);
+
+        $student = $StudentsModel->select()->leftJoin('groups', ['group_id' => 'group_id'])->eq()->where(['student_id' => $req->params['id']])->request();
 
         $res->setTitle('Студент');
 
         if ($student) {
             $res->sendHTML("
-                <div class='card border-primary-subtle font-monospace'>
+                <div class='card border-warning font-monospace'>
                 <div class='card-header text-center'>Карточка студента</div>
                 <div class='card-body'>
                     <ul class='list-group list-group-flush'>
-                        <li class='list-group-item'>$student->first_name $student->second_name</li>
+                        <li class='list-group-item'>Студент: $student->first_name $student->second_name</li>
                         <li class='list-group-item'>Дата рождения: $student->birth_date</li>
                         <li class='list-group-item'>Дата поступления: $student->receipt_date</li>
+                        <li class='list-group-item' onclick=window.location.href='/groups/$student->group_id' style='cursor: pointer;'>Группа: $student->group_name</li>
                     </ul>
                 </div>
             </div>

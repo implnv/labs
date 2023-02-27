@@ -1,7 +1,6 @@
 <?php
 class GroupsModel
 {
-    public int $_id;
-    public string $name;
-    public string $color;
+    public int $_group_id;
+    public string $group_name;
 };

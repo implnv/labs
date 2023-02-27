@@ -100,6 +100,79 @@ class Model
         return $this;
     }
 
+    public function leftJoin(string $table, array $conditions): object
+    {
+        $this->chainQuery .= " LEFT JOIN {$table} ON";
+        $index = 0;
+
+        foreach ($conditions as $key => $value) {
+            if ($index === count($conditions) - 1) {
+                $this->chainQuery .= " {$table}.{$key} OP {$this->className}.{$value}";
+            } else {
+                $this->chainQuery .= "{$table}.{$key} OP {$this->className}.{$value} AND ";
+            }
+            
+            $index = $index + 1;
+        }
+
+        return $this;
+    }
+
+    public function eq(): object
+    {
+        $this->chainQuery = str_replace('OP', '=', $this->chainQuery);
+
+        return $this;
+    }
+    
+    /**
+     * Method gt
+     *
+     * @return object
+     */
+    public function gt(): object
+    {
+        $this->chainQuery = str_replace('OP', '>', $this->chainQuery);
+
+        return $this;
+    }
+    
+    /**
+     * Method lt
+     *
+     * @return object
+     */
+    public function lt(): object
+    {
+        $this->chainQuery = str_replace('OP', '<', $this->chainQuery);
+
+        return $this;
+    }
+        
+    /**
+     * Method ge
+     *
+     * @return object
+     */
+    public function ge(): object
+    {
+        $this->chainQuery = str_replace('OP', '>=', $this->chainQuery);
+
+        return $this;
+    }
+    
+    /**
+     * Method le
+     *
+     * @return object
+     */
+    public function le(): object
+    {
+        $this->chainQuery = str_replace('OP', '<=', $this->chainQuery);
+
+        return $this;
+    }
+
     /**
      * Method where
      *
@@ -109,7 +182,11 @@ class Model
      */
     public function where(array $conditions = []): object
     {
-        $this->chainQuery .= "WHERE ";
+        if (empty($conditions)) {
+            return $this;
+        }
+
+        $this->chainQuery .= " WHERE ";
         $index = 0;
 
         foreach ($conditions as $key => $value) {
@@ -151,6 +228,7 @@ class Model
     public function requestAll(): array|bool
     {
         $connection = Database::createConnect();
+
         $result = $connection->query($this->chainQuery)->fetchAll(\PDO::FETCH_ASSOC);
         Database::closeConnect($connection);
 
@@ -321,11 +399,8 @@ class Model
      */
     public function find(array $conditions): array|object|bool
     {
-        if (empty($conditions)) {
-            $result = $this->select()->requestAll();
-        } else {
-            $result = $this->select()->where($conditions)->limit()->request();
-        }
+
+        $result = $this->select()->where($conditions)->requestAll();
 
         if ($result) {
             return $result;
