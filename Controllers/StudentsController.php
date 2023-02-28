@@ -24,10 +24,41 @@ class StudentsController
 
             $res->setTitle('Студенты');
             $res->sendHTML("
-                <div class='btn-group' role='group' aria-label='Basic example'>
-                    <button type='button' class='btn btn-primary'>Добавить</button>
-                    <button type='button' class='btn btn-danger'>Удалить</button>
-                    <button type='button' class='btn btn-warning'>Редактировать</button>
+                <div class='modal fade' id='addStudentModal' aria-hidden='true' aria-labelledby='addStudentModalLabel' tabindex='-1'>
+                    <div class='modal-dialog modal-dialog-centered'>
+                        <div class='modal-content'>
+                            <div class='modal-header'>
+                                <h1 class='modal-title fs-5' id='addStudentModalLabel'>Добавление студента</h1>
+                                <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                            </div>
+                            <div class='modal-body'>
+                                <input type='text' class='form-control mb-1' placeholder='Имя студента' aria-label='Имя студента'>
+                                <input type='text' class='form-control mb-1' placeholder='Фамилия студента' aria-label='Фамилия студента'>
+                                <div class='input-group input-group-sm mb-1'>
+                                    <span class='input-group-text'>Дата рождения</span>
+                                    <input class='form-control' type='date' placeholder='dasda'>
+                                </div>
+                                <div class='input-group input-group-sm mb-1'>
+                                    <span class='input-group-text'>Дата поступления</span>
+                                    <input class='form-control' type='date' placeholder='dasda'>
+                                </div>
+                                <select class='form-select'>
+                                    <option selected disabled>Группа</option>
+                                    <option value='1'>One</option>
+                                </select>
+                            </div>
+                            <div class='modal-footer'>
+                                <button type='button' class='btn btn-outline-dark' onclick='addStudent()'>Сохранить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class='d-flex flex-row-reverse'>
+                    <div class='btn-group' role='group' aria-label='Basic example'>
+                        <button type='button' class='btn btn-primary' data-bs-toggle='modal' href='#addStudentModal' role='button'>Добавить</button>
+                        <button type='button' class='btn btn-danger' onclick='removeStudent()'>Удалить</button>
+                        <button type='button' class='btn btn-warning' onclick='editStudent()'>Редактировать</button>
+                    </div>
                 </div>
                 <table class='table table-bordered table-hover caption-top'>
                     <caption class='fw-bold'>Список студентов</caption>
@@ -43,6 +74,49 @@ class StudentsController
                     <tbody class='font-monospace'>
                         $studentsMarkup
                     </tbody>
+                    <script>
+                        let xhr = new XMLHttpRequest();
+
+                        const request = (method = 'GET', path, jsonData) => {
+                            if (!path) {
+                                return
+                            }
+                            xhr.open(method, path)
+                            if (method === 'POST') {
+                                xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8')
+                                xhr.send(jsonData)
+                            }
+                            else {
+                                xhr.send()
+                            }
+                        }
+
+                        const addStudent = () => {
+                            request('POST', '/students/add', JSON.stringify({
+                                first_name: 'Вася',
+                                second_name: 'Петров',
+                                birth_date: '2020-01-01',
+                                receipt_date: '2018-01-01',
+                                group_id: '2'
+                            }))
+                        }
+
+                        const removeStudent = () => {
+                            request('DELETE', '/students/remove', JSON.stringify({
+                                student_id: 0
+                            }))
+                        }
+
+                        const editStudent = () => {
+                            request('PATCH', '/students/edit', JSON.stringify({
+                                first_name: 'Вася',
+                                second_name: 'Петров',
+                                birth_date: '2020-01-01',
+                                receipt_date: '2018-01-01',
+                                group_id: '1'
+                            }))
+                        }
+                    </script>
             ");
         }
     }
@@ -74,5 +148,28 @@ class StudentsController
                 <p class='font-monospace'>Студент не найден</p>
             ", 404);
         }
+    }
+
+    public static function StudentAdd(Request $req, Response $res)
+    {
+        global $StudentsModel;
+        print_r($req->body);
+        // $StudentsModel->create([
+        //     "first_name"    => $req->body["first_name"],
+        //     "second_name"   => $req->body["second_name"],
+        //     "birth_date"    => $req->body["birth_date"],
+        //     "receipt_date"  => $req->body["receipt_date"],
+        //     "group_id"      => $req->body["group_id"]
+        // ]);
+    }
+
+    public static function StudentRemove(Request $req, Response $res)
+    {
+        
+    }
+
+    public static function StudentEdit(Request $req, Response $res)
+    {
+        
     }
 }

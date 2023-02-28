@@ -13,13 +13,12 @@ Template::getInstance()->useWrapper('
     <div class="container mt-2 mb-2">
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid p-0">
-                <a class="navbar-brand rounded-2 p-1" style="background-color: #000000cf; color: #fef5ca;" href="/">Администрирование</a>
-                <div class="navbar-nav rounded-2" style="background-color: #fff5cc;">
-                    <a class="nav-link" href="/students">Студенты</a>
-                    <a class="nav-link" href="/groups">Группы</a>
-                    <a class="nav-link" href="/disciplines">Дисциплины</a>
-                    <a class="nav-link" href="/sheets">Ведомость</a>
-                    <a class="nav-link" href="/teachers"">Преподаватели</a>
+                <a class="navbar-brand rounded-2 p-1" style="background-color: #000000cf; color: #f9c000;" href="/">Администрирование</a>
+                <div class="navbar-nav rounded-2" style="background-color: #f9c000;">
+                    <a class="nav-link" href="/students" accesskey="1">Студенты</a>
+                    <a class="nav-link" href="/groups" accesskey="2">Группы</a>
+                    <a class="nav-link" href="/disciplines" accesskey="3">Дисциплины</a>
+                    <a class="nav-link" href="/teachers" accesskey="5">Преподаватели</a>
                 </div>
             </div>
         </nav>
@@ -30,11 +29,11 @@ Template::getInstance()->useWrapper('
 $route = new Router();
 $http  = new Http($route);
 
-$StudentsModel      = new Model(StudentsModel::class);
-$GroupsModel        = new Model(GroupsModel::class);
-$DisciplinesModel   = new Model(DisciplinesModel::class);
-$SheetsModel        = new Model(SheetsModel::class);
-$TeachersModel      = new Model(TeachersModel::class);
+$StudentsModel              = new Model(StudentsModel::class);
+$GroupsModel                = new Model(GroupsModel::class);
+$DisciplinesModel           = new Model(DisciplinesModel::class);
+$DisciplinesTeachersModel   = new Model(Disciplines_TeachersModel::class);
+$TeachersModel              = new Model(TeachersModel::class);
 
 $route->get('/', function (Request $req, Response $res) {
     $res->setTitle('Главная');
@@ -52,13 +51,14 @@ $route->get('/', function (Request $req, Response $res) {
 
 $route->get('/students', 'StudentsController::Students');
 $route->get('/students/:id', 'StudentsController::Student');
+$route->post('/students/add', 'StudentsController::StudentAdd');
+$route->delete('/students/remove', 'StudentsController::StudentRemove');
+$route->patch('/students/edit', 'StudentsController::StudentEdit');
 
 $route->get('/groups', 'GroupsController::Groups');
 $route->get('/groups/:id', 'GroupsController::Group');
 
 $route->get('/disciplines', 'DisciplinesController::Disciplines');
-
-$route->get('/sheets', 'SheetsController::Sheets');
 
 $route->get('/teachers', 'TeachersController::Teachers');
 $route->get('/teachers/:id', 'TeachersController::Teacher');

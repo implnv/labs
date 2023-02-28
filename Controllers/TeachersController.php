@@ -44,19 +44,25 @@ class TeachersController
 
     public static function Teacher(Request $req, Response $res)
     {
-        global $TeachersModel;
+        global $DisciplinesTeachersModel;
 
-        $disciplines = 0;
+        $disciplines = $DisciplinesTeachersModel->select()->leftJoin('disciplines', ['discipline_id' => 'discipline_id'])->eq()->where(['teacher_id' => $req->params['id']])->requestAll();
 
         $res->setTitle('Список дисциплин');
 
         if ($disciplines) {
+            $disciplinesMarkup = '';
+
+            foreach ($disciplines as $discipline) {
+                $disciplinesMarkup .= "<li class='list-group-item'>$discipline->discipline_name</li>";
+            }
+
             $res->sendHTML("
                 <div class='card border-warning font-monospace'>
                 <div class='card-header text-center'>Список преподаваемых дисциплин</div>
                 <div class='card-body'>
                     <ul class='list-group list-group-flush'>
-                        <li class='list-group-item'>Студент:</li>
+                        $disciplinesMarkup
                     </ul>
                 </div>
             </div>

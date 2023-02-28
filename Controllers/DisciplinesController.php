@@ -21,7 +21,7 @@ class DisciplinesController
             $res->setTitle('Студенты');
             $res->sendHTML("
                 <table class='table table-bordered table-hover caption-top'>
-                    <caption class='fw-bold'>Список студентов</caption>
+                    <caption class='fw-bold'>Список дисциплин</caption>
                     <thead>
                         <tr>
                             <th scope='col'>Название дисциплины</th>

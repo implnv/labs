@@ -9,7 +9,7 @@ class Request
     public string $requestMethod;
     public string $httpAccept;
     public array $params;
-    public array $body;
+    public array|null $body;
 
     /**
      * Method __construct
