@@ -14,11 +14,11 @@ Template::getInstance()->useWrapper('
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid p-0">
                 <a class="navbar-brand rounded-2 p-1" style="background-color: #000000cf; color: #f9c000;" href="/">Администрирование</a>
-                <div class="navbar-nav rounded-2" style="background-color: #f9c000;">
+                <div class="navbar-nav rounded-2" style="background-color: #f9c000; font-weight: 700;">
                     <a class="nav-link" href="/students" accesskey="1">Студенты</a>
                     <a class="nav-link" href="/groups" accesskey="2">Группы</a>
                     <a class="nav-link" href="/disciplines" accesskey="3">Дисциплины</a>
-                    <a class="nav-link" href="/teachers" accesskey="5">Преподаватели</a>
+                    <a class="nav-link" href="/teachers" accesskey="4">Преподаватели</a>
                 </div>
             </div>
         </nav>
@@ -42,7 +42,7 @@ $route->get('/', function (Request $req, Response $res) {
             <div class="card-header text-center">Заметка</div>
             <div class="card-body">
                 <blockquote class="blockquote mb-0">
-                    <p>Работа выполнена студентом группы АСУ-18-1БЗ Полуяновым Андреем. В данной работе реализованы CRUD операции, а также объектно-реляционное отображение <mark>при помощи собственной библиотеки:</mark> <a href="https://github.com/implnv/moco">https://github.com/implnv/moco</a></p>
+                    <p>Работа выполнена студентом группы АСУ-18-1БЗ Полуяновым Андреем. В данной работе реализованы CRUD операции, а также объектно-реляционное отображение <mark>при помощи собственной библиотеки.</p>
                 </blockquote>
             </div>
         </div>
@@ -52,8 +52,8 @@ $route->get('/', function (Request $req, Response $res) {
 $route->get('/students', 'StudentsController::Students');
 $route->get('/students/:id', 'StudentsController::Student');
 $route->post('/students/add', 'StudentsController::StudentAdd');
-$route->delete('/students/remove', 'StudentsController::StudentRemove');
-$route->patch('/students/edit', 'StudentsController::StudentEdit');
+$route->delete('/students/:id/remove', 'StudentsController::StudentRemove');
+$route->patch('/students/:id/edit', 'StudentsController::StudentEdit');
 
 $route->get('/groups', 'GroupsController::Groups');
 $route->get('/groups/:id', 'GroupsController::Group');

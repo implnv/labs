@@ -72,16 +72,25 @@ class Router
             if (!empty($matchParams[0])) {
                 if (($matchParams[0][0] === $request->requestURI || $matchParams[0][0]  . '/' === $request->requestURI) && $route->requestMethod === $request->requestMethod) {
                     switch ($route->requestMethod) {
-                        case 'GET': {
+                        case 'GET': 
+                        case 'DELETE': {
                                 foreach ($route->pathArgUnits as $arg) {
                                     $request->params[$arg] = $matchParams[$arg][0];
                                 }
                                 break;
-                            }
-                        case 'POST' || 'DELETE' || 'PUT' || 'PATCH': {
+                        }
+                        case 'POST':
+                        case 'PUT': {
                                 $request->body = json_decode(file_get_contents('php://input'), true);
                                 break;
-                            }
+                        }
+                        case 'PATCH': {
+                                foreach ($route->pathArgUnits as $arg) {
+                                    $request->params[$arg] = $matchParams[$arg][0];
+                                }
+                                $request->body = json_decode(file_get_contents('php://input'), true);
+                                break;
+                        }
                     }
 
                     return $route;
